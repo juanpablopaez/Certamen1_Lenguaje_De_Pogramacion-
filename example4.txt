@@ -1,0 +1,157 @@
+// ===============================================
+// EJEMPLO 4: LIBRERÍA DE 6 LUCHADORES Y PELEA COMPLEJA
+// ===============================================
+
+// --- LUCHADOR 1: Ryu (Balanceado) ---
+luchador Ryu {
+    stats(hp = 100, st = 100);
+    acciones {
+        basicas:
+            PunioBajo(danio=5, costo=5, altura=baja),
+            PatadaFuerte(danio=12, costo=15, altura=alta);
+        especiales:
+            Hadoken(danio=20, costo=25),
+            Tatsumaki(danio=18, costo=20, giratoria=yes);
+    }
+    combos {
+        ComboBasico(st_req=20) { PunioBajo, PatadaFuerte }
+        ShoryukenCombo(st_req=40) { Tatsumaki, Hadoken }
+    }
+}
+
+// --- LUCHADOR 2: Ken (Agresivo) ---
+luchador Ken {
+    stats(hp = 100, st = 100);
+    acciones {
+        basicas:
+            PatadaAlta(danio=8, costo=10, altura=alta),
+            PunioFuerte(danio=10, costo=12);
+        especiales:
+            Shoryuken(danio=22, costo=30),
+            HadokenFuego(danio=25, costo=30);
+        bloqueo: 
+            bloqueo_alto;
+    }
+    combos {
+        ComboLlama(st_req=50) { HadokenFuego, Shoryuken }
+        ComboPatada(st_req=30) { PatadaAlta, PunioFuerte }
+    }
+}
+
+// --- LUCHADOR 3: Guile (Defensivo) ---
+luchador Guile {
+    stats(hp = 100, st = 110);
+    acciones {
+        basicas:
+            PatadaBaja(danio=6, costo=5, altura=baja),
+            GolpeInvertido(danio=9, costo=10, altura=media);
+        especiales:
+            SonicBoom(danio=20, costo=25),
+            FlashKick(danio=24, costo=30);
+    }
+    combos {
+        ComboMilitar(st_req=40) { SonicBoom, FlashKick }
+        ComboAereo(st_req=20) { PatadaBaja, GolpeInvertido }
+    }
+}
+
+// --- LUCHADOR 4: Blanka (Impredecible) ---
+luchador Blanka {
+    stats(hp = 120, st = 90);
+    acciones {
+        basicas:
+            Mordisco(danio=10, costo=10),
+            Garraso(danio=12, costo=15);
+        especiales:
+            Electricidad(danio=25, costo=30),
+            Rodada(danio=20, costo=20, giratoria=yes);
+    }
+    combos {
+        ComboJungla(st_req=45) { Electricidad, Rodada }
+        ComboVoltereta(st_req=30) { Mordisco, Garraso }
+    }
+}
+
+// --- LUCHADOR 5: Dhalsim (Largo Alcance) ---
+luchador Dhalsim {
+    stats(hp = 90, st = 120);
+    acciones {
+        basicas:
+            EstirarBrazo(danio=8, costo=5, altura=media),
+            EstirarPierna(danio=10, costo=10, altura=media);
+        especiales:
+            YogaFire(danio=20, costo=20),
+            YogaTeleport(danio=0, costo=30);
+    }
+    combos {
+        ComboLargo(st_req=20) { EstirarBrazo, EstirarPierna }
+        ComboFuego(st_req=40) { YogaFire, EstirarBrazo }
+    }
+}
+
+// --- LUCHADOR 6: E.Honda (Tanque) ---
+luchador EHonda {
+    stats(hp = 140, st = 80);
+    acciones {
+        basicas:
+            GolpePalma(danio=10, costo=10),
+            Pisoton(danio=14, costo=15);
+        especiales:
+            SumoHeadbutt(danio=25, costo=30),
+            HundredHands(danio=20, costo=25);
+    }
+    combos {
+        ComboSumo(st_req=40) { HundredHands, SumoHeadbutt }
+        ComboSal(st_req=25) { GolpePalma, Pisoton }
+    }
+}
+
+
+// ===============================================
+//            BLOQUE DE SIMULACIÓN
+// ===============================================
+simulacion {
+
+    config {
+        luchadores: Ryu vs Ken;
+        inicia: Ryu;
+        turnos_max: 30;
+    }
+
+    pelea {
+        // --- TURNO DE RYU ---
+        // Prueba de 2 básicos, 2 especiales, 2 combos y 2 "bloqueos" (condiciones SI)
+        turno Ryu {
+            si (self.hp < 20) {
+                usa Tatsumaki;      
+                usa ComboBasico;    
+            } sino {
+                // "Bloqueo" 2: Lógica de presión si el oponente tiene poca estamina
+                si (oponente.st < 40) {
+                    usa ShoryukenCombo; 
+                    usa PatadaFuerte;  
+                } sino {
+                    usa Hadoken;        
+                    usa PunioBajo;      
+                }
+            }
+        }
+
+        // --- TURNO DE KEN ---
+        // Prueba de 2 básicos, 2 especiales, 2 combos y 2 "bloqueos" (condiciones SI)
+        turno Ken {
+            si (oponente.hp < 50) {
+                usa ComboLlama;
+                usa Shoryuken;  
+            } sino {
+                si (self.st > 80) {
+                    usa ComboPatada; 
+                    usa HadokenFuego;
+                } sino {
+                    usa PatadaAlta;     
+                    usa PunioFuerte;    
+                }
+            }
+        }
+    }
+}

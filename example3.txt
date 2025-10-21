@@ -1,0 +1,127 @@
+luchador Ryu {
+    stats(hp = 100, st = 100);
+
+    acciones {
+        basicas:
+            PunioBajo(danio=5, costo=5, altura=baja),
+            PatadaMedia(danio=8, costo=10, altura=media),
+            PatadaFuerte(danio=12, costo=15, altura=alta);
+        
+        especiales:
+            Hadoken(danio=20, costo=25, altura=media, forma=frontal),
+            Tatsumaki(danio=18, costo=20, giratoria=yes);
+    }
+
+    combos {
+        ComboBasico(st_req=20) {
+            PunioBajo, PatadaMedia
+        }
+        Shoryuken(st_req=40) {
+            PunioBajo, PatadaFuerte, Tatsumaki
+        }
+    }
+}
+luchador Zangief {
+    stats(hp = 130, st = 80);
+
+    acciones {
+        agarres:
+            AgarreFuerte(danio=30, costo=35, altura=media),
+            Cabezazo(danio=10, costo=10, altura=alta);
+        
+        ataques:
+            Lariat(danio=20, costo=25, giratoria=yes, forma=lateral),
+            Plancha(danio=15, costo=15, altura=baja);
+    }
+
+    combos {
+        SpinningPiledriver(st_req=60) {
+            Lariat, AgarreFuerte
+        }
+        ComboRuso(st_req=25) {
+            Cabezazo, Plancha
+        }
+    }
+}
+
+luchador ChunLi {
+    stats(hp = 90, st = 120);
+
+    acciones {
+        patadas:
+            PatadaBaja(danio=5, costo=5, altura=baja),
+            PatadaMedia(danio=10, costo=10, altura=media),
+            PatadaFuerte(danio=15, costo=15, altura=alta);
+        
+        especiales:
+            Kikoken(danio=20, costo=25, altura=media, forma=frontal),
+            SpinningBirdKick(danio=22, costo=30, giratoria=yes);
+    }
+
+    combos {
+        Hyakuretsukyaku(st_req=30) {
+            PatadaBaja, PatadaMedia, PatadaFuerte
+        }
+        ComboAereo(st_req=40) {
+            Kikoken, SpinningBirdKick
+        }
+    }
+}
+luchador Sagat {
+    stats(hp = 110, st = 90);
+
+    acciones {
+        proyectiles:
+            TigerShotHigh(danio=20, costo=20, altura=alta),
+            TigerShotLow(danio=20, costo=20, altura=baja);
+        
+        fisicos:
+            TigerKnee(danio=25, costo=30, altura=media);
+    }
+
+    combos {
+        TigerUppercut(st_req=50) {
+            TigerKnee, TigerShotHigh
+        }
+        LowPressure(st_req=45) {
+            TigerShotLow, TigerKnee
+        }
+    }
+}
+simulacion {
+
+    config {
+        luchadores: Ryu vs ChunLi;
+        inicia: Ryu;
+        turnos_max: 10;
+    }
+
+    pelea {
+        turno Ryu {
+            
+            si (oponente.hp < 30) {
+                // Intenta el combo de remate
+                usa Shoryuken;
+            } sino {
+                si (self.st > 60) {
+                    usa Hadoken;
+                } sino {
+                    usa PatadaMedia;
+                }
+            }
+        }
+
+        turno ChunLi {
+            
+            si (self.hp < 40) {
+                usa Kikoken;
+            } sino {
+                si (self.st > 50) {
+                    usa Hyakuretsukyaku;
+                } sino {
+                    usa PatadaFuerte;
+                }
+            }
+        }
+    }
+}

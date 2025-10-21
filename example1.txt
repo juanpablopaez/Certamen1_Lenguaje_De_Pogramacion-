@@ -1,0 +1,50 @@
+luchador Ryu {
+    stats(hp=100, st=100);
+    acciones {
+        golpe: puño_ligero(daño=5, costo=3, altura=media, forma=frontal, giratoria=no);
+        golpe_fuerte: puño_fuerte(daño=10, costo=7, altura=media, forma=frontal, giratoria=no);
+        patada: patada_baja(daño=6, costo=4, altura=baja, forma=frontal, giratoria=no);
+        bloqueo: bloqueo_alto;
+    }
+    combos {
+        Shoryuken(st_req=20) { puño_fuerte, puño_fuerte, puño_ligero }
+        Hadouken(st_req=25) { puño_fuerte, puño_ligero }
+    }
+}
+
+luchador Ken {
+    stats(hp=100, st=100);
+    acciones {
+        golpe: puño_fuerte(daño=10, costo=7, altura=media, forma=frontal, giratoria=no);
+        patada: patada_baja(daño=6, costo=4, altura=baja, forma=frontal, giratoria=no);
+    }
+    combos {
+        Hadouken(st_req=25) { puño_fuerte, puño_ligero }
+    }
+}
+
+simulacion {
+    config {
+        luchadores: Ryu vs Ken;
+        inicia: Ryu;
+        turnos_max: 20;
+    }
+    pelea {
+        turno Ryu {
+            si (oponente.hp < 50) {
+                usa Shoryuken;
+            } sino {
+                usa puño_fuerte;
+            }
+            usa patada_baja;
+        }
+        turno Ken {
+            usa patada_baja;
+            si (self.st > 50) {
+                usa Hadouken;
+            } sino {
+                usa puño_fuerte;
+            }
+        }
+    }
+}

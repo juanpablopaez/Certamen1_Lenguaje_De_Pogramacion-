@@ -1,0 +1,32 @@
+luchador A {
+    stats(hp=80, st=50);
+    acciones {
+        golpe: jab(daño=4, costo=2, altura=media, forma=frontal, giratoria=no);
+    }
+    combos {
+        ComboA(st_req=10) { jab, jab }
+    }
+}
+
+luchador B {
+    stats(hp=90, st=60);
+    acciones {
+        golpe: strong(daño=12, costo=8, altura=media, forma=frontal, giratoria=no);
+    }
+}
+
+simulacion {
+    config {
+        luchadores: A vs B;
+        inicia: B;
+        turnos_max: 10;
+    }
+    pelea {
+        turno A {
+            usa jab;
+        }
+        turno B {
+            usa strong;
+        }
+    }
+}
